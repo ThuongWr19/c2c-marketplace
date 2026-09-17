@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS reports (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  reporter_id BIGINT UNSIGNED NOT NULL,
+  target_type ENUM('LISTING','USER','REVIEW','MESSAGE') NOT NULL,
+  target_id BIGINT UNSIGNED NOT NULL,
+  reason ENUM('FAKE_GOODS','FRAUD','PROHIBITED_CONTENT','SPAM','HARASSMENT','OTHER') NOT NULL,
+  description TEXT NULL,
+  evidence_images JSON NULL,
+  status ENUM('PENDING','REVIEWING','RESOLVED','DISMISSED') NOT NULL DEFAULT 'PENDING',
+  resolved_by BIGINT UNSIGNED NULL,
+  resolution_note VARCHAR(500) NULL,
+  resolved_at DATETIME NULL,
+  priority TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE RESTRICT,
+  FOREIGN KEY (resolved_by) REFERENCES users(id) ON DELETE SET NULL,
+  INDEX idx_report_target (target_type, target_id, status),
+  INDEX idx_report_status_priority (status, priority DESC, created_at ASC),
+  INDEX idx_report_reporter (reporter_id, created_at DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

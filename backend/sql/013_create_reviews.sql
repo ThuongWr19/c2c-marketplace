@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS reviews (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  transaction_id BIGINT UNSIGNED NOT NULL,
+  reviewer_id BIGINT UNSIGNED NOT NULL,
+  reviewee_id BIGINT UNSIGNED NOT NULL,
+  rating TINYINT UNSIGNED NOT NULL,
+  comment TEXT NULL,
+  images JSON NULL,
+  seller_reply TEXT NULL,
+  seller_replied_at DATETIME NULL,
+  is_visible BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uniq_review_tx_reviewer (transaction_id, reviewer_id),
+  FOREIGN KEY (transaction_id) REFERENCES transactions(id) ON DELETE CASCADE,
+  FOREIGN KEY (reviewer_id) REFERENCES users(id) ON DELETE RESTRICT,
+  FOREIGN KEY (reviewee_id) REFERENCES users(id) ON DELETE RESTRICT,
+  INDEX idx_reviews_reviewee (reviewee_id, is_visible, created_at DESC),
+  INDEX idx_reviews_reviewer (reviewer_id, created_at DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

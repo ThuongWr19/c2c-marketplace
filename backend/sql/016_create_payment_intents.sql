@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS payment_intents (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  transaction_id BIGINT UNSIGNED NOT NULL,
+  buyer_id BIGINT UNSIGNED NOT NULL,
+  amount BIGINT UNSIGNED NOT NULL,
+  method ENUM('WALLET','VIETQR','MOMO','ZALOPAY','CARD','COD','MEETUP') NOT NULL,
+  status ENUM('INITIATED','PROCESSING','SUCCESS','FAILED','EXPIRED','CANCELLED') NOT NULL DEFAULT 'INITIATED',
+  gateway_ref VARCHAR(128) NULL,
+  gateway_response JSON NULL,
+  idempotency_key VARCHAR(64) UNIQUE NOT NULL,
+  expires_at DATETIME NOT NULL,
+  paid_at DATETIME NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (transaction_id) REFERENCES transactions(id) ON DELETE CASCADE,
+  FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE RESTRICT,
+  INDEX idx_payment_tx (transaction_id),
+  INDEX idx_payment_buyer_status (buyer_id, status),
+  INDEX idx_payment_status_expires (status, expires_at),
+  INDEX idx_payment_gateway (gateway_ref)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

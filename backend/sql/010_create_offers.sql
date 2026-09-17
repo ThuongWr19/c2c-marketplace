@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS offers (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  listing_id BIGINT UNSIGNED NOT NULL,
+  buyer_id BIGINT UNSIGNED NOT NULL,
+  seller_id BIGINT UNSIGNED NOT NULL,
+  offered_price BIGINT UNSIGNED NOT NULL,
+  message VARCHAR(500) NULL,
+  status ENUM('PENDING','ACCEPTED','REJECTED','EXPIRED','WITHDRAWN','COMPLETED') NOT NULL DEFAULT 'PENDING',
+  reject_reason VARCHAR(255) NULL,
+  responded_at DATETIME NULL,
+  expires_at DATETIME NOT NULL,
+  version INT UNSIGNED NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE RESTRICT,
+  FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE RESTRICT,
+  FOREIGN KEY (seller_id) REFERENCES users(id) ON DELETE RESTRICT,
+  INDEX idx_offers_listing_status (listing_id, status),
+  INDEX idx_offers_buyer_status (buyer_id, status, created_at DESC),
+  INDEX idx_offers_seller_status (seller_id, status, created_at DESC),
+  INDEX idx_offers_pending_expires (status, expires_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

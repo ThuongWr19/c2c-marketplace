@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS saved_searches (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT UNSIGNED NOT NULL,
+  name VARCHAR(100) NULL,
+  filters JSON NOT NULL,
+  notify_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+  last_notified_at DATETIME NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_saved_search_user (user_id, created_at DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

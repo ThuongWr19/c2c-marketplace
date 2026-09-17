@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS cancellation_logs (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  transaction_id BIGINT UNSIGNED NOT NULL,
+  cancelled_by BIGINT UNSIGNED NOT NULL,
+  role ENUM('BUYER','SELLER','ADMIN','SYSTEM') NOT NULL,
+  reason VARCHAR(255) NOT NULL,
+  reputation_impact TINYINT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (transaction_id) REFERENCES transactions(id) ON DELETE CASCADE,
+  FOREIGN KEY (cancelled_by) REFERENCES users(id) ON DELETE RESTRICT,
+  INDEX idx_cancel_tx (transaction_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

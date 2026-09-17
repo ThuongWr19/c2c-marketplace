@@ -1,0 +1,35 @@
+-- =====================================================
+-- Bảng người dùng
+-- =====================================================
+CREATE TABLE IF NOT EXISTS users (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  display_name VARCHAR(100) NOT NULL,
+  slug VARCHAR(120) UNIQUE NOT NULL,
+  avatar_url VARCHAR(512) NULL,
+  bio VARCHAR(200) NULL,
+  phone VARCHAR(20) UNIQUE NULL,
+  phone_verified_at DATETIME NULL,
+  email_verified_at DATETIME NULL,
+  gender ENUM('MALE','FEMALE','OTHER') NULL,
+  date_of_birth DATE NULL,
+  default_address VARCHAR(255) NULL,
+  latitude DECIMAL(10,8) NULL,
+  longitude DECIMAL(11,8) NULL,
+  role ENUM('USER','ADMIN') NOT NULL DEFAULT 'USER',
+  reputation_score TINYINT UNSIGNED NOT NULL DEFAULT 50,
+  seller_tier ENUM('NEW','TRUSTED','PRO') NOT NULL DEFAULT 'NEW',
+  identity_verified_at DATETIME NULL,
+  identity_document_url VARCHAR(512) NULL,
+  status ENUM('ACTIVE','LOCKED','DELETED') NOT NULL DEFAULT 'ACTIVE',
+  locked_reason VARCHAR(255) NULL,
+  deleted_at DATETIME NULL,
+  last_login_at DATETIME NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_users_role_status (role, status),
+  INDEX idx_users_reputation (reputation_score),
+  INDEX idx_users_seller_tier (seller_tier, status),
+  INDEX idx_users_created_at (created_at DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

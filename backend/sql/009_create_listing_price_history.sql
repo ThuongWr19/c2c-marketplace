@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS listing_price_history (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  listing_id BIGINT UNSIGNED NOT NULL,
+  old_price BIGINT UNSIGNED NOT NULL,
+  new_price BIGINT UNSIGNED NOT NULL,
+  changed_by BIGINT UNSIGNED NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE,
+  FOREIGN KEY (changed_by) REFERENCES users(id) ON DELETE RESTRICT,
+  INDEX idx_price_history_listing (listing_id, created_at DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
