@@ -9,7 +9,9 @@
         "test": "jest --runInBand",
         "lint": "eslint src/",
         "migrate": "node sql/migrate.js",
-        "seed": "node sql/seed.js"
+        "seed": "node sql/seed.js",
+        "db:init": "node scripts/database-init.js",
+        "db:reset": "node scripts/database-reset.js"
     },
     "keywords": [],
     "author": "",
