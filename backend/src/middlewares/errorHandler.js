@@ -1,6 +1,6 @@
 import { ZodError } from "zod";
 
-export function errorHandler(err, req, res, next) {
+export function errorHandler(err, _req, res, _next) {
     console.error(err);
     if (err instanceof ZodError) {
         return res

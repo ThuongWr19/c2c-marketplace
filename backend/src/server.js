@@ -13,6 +13,7 @@ async function bootstrap() {
     const server = http.createServer(app);
 
     server.listen(PORT, () => {
+        // eslint-disable-next-line no-console
         console.log(`[Server] Running on http://localhost:${PORT}`);
     });
 }
